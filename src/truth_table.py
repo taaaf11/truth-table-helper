@@ -125,7 +125,6 @@ class Table:
             
             for docx_col_index in range(len(self.columns)):
                 cells[docx_col_index].text = str(self.columns[docx_col_index][docx_row_index - 1])
-            data_row_index += 1
             
         document.save(filename_to_save)
         

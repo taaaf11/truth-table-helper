@@ -128,3 +128,9 @@ class Table:
             
         document.save(filename_to_save)
         
+
+def make_document(filename: str, input_variables: str, *derived_columns: OperationBC):
+    document = doc_create()
+    # table = Table("A|B|C", NOT("A", header="NOT A"), NOT("B", header="NOT B"), AND("A|NOT B", header="A|NOT B")) 
+    table = Table(input_variables, *derived_columns)
+    table.to_docx_table(document, filename)

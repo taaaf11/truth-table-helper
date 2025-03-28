@@ -120,11 +120,12 @@ class Table:
         for docx_col_index in range(len(self.columns)):
             first_row_cells[docx_col_index].text = self.names[docx_col_index]
         
-        for docx_row_index in range(1, 2 ** len(self.inputs)):
+        for docx_row_index in range(1, 2 ** len(self.inputs)+1):
             cells = docx_table.rows[docx_row_index].cells
             
             for docx_col_index in range(len(self.columns)):
                 cells[docx_col_index].text = str(self.columns[docx_col_index][docx_row_index - 1])
+            data_row_index += 1
             
         document.save(filename_to_save)
         

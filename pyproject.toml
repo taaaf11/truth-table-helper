@@ -10,6 +10,9 @@ description = "A simple package to create MS Word tables with truth tables of lo
 authors = [
   {name = "Muhammad Altaaf", email = "taafuuu@gmail.com"},
 ]
+dependencies = [
+    "python-docx == 1.1.2"
+]
 classifiers = [
   # Indicate who your project is intended for
   "Intended Audience :: Users",

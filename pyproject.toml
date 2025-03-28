@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "truth_table"
+version = "0.0.1"
+description = "A simple package to create MS Word tables with truth tables of logic gates."
+authors = [
+  {name = "Muhammad Altaaf", email = "taafuuu@gmail.com"},
+]
+classifiers = [
+  # Indicate who your project is intended for
+  "Intended Audience :: Users",
+  "Private :: Do Not Upload"
+]

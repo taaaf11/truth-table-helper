@@ -8,25 +8,18 @@ from docx import Document as doc_create
 @dataclass
 class OperationBC:
     inputs: str
+    header: str
     gate_name: str
     operation_callable: Callable[[int, int], int] | Callable[[int], int]
-    header: str | None = None
     
     def __post_init__(self):
         self.inputs = self.inputs.split("|")
         
-    @property
-    def header_name(self) -> str:
-        return self.header or str(self)
-    
     def do(self, values: list[int]) -> int:
         temp = values[0]
         for val in values[1:]:
             temp = self.operation_callable(temp, val)
         return temp
-    
-    def __str__(self):
-        return f"{self.gate_name}{''.join(self.inputs)}"
 
 
 AND = partial(OperationBC, gate_name="AND", operation_callable=lambda x, y: int(x == 1 and y == 1))
@@ -46,7 +39,7 @@ class Table:
         self.derived = derived
 
         self.columns = []
-        self.columns_index = {}
+        self.columns_dict = {}
         
         self._construct_stored_columns()
         self._construct_derived_columns()
@@ -85,7 +78,7 @@ class Table:
             self.columns.append(Table._construct_column(column_index, total_columns))
 
             column_name = self.inputs[column_index - 1]
-            self.columns_index[column_name] = self.columns[-1]
+            self.columns_dict[column_name] = self.columns[-1]
             
     def _construct_derived_columns(self):
         """
@@ -97,13 +90,13 @@ class Table:
             column = []
             for row_index in range(2 ** len(self.inputs)):
                 if derived_op.gate_name == "NOT":
-                    final_value = int(not self.columns_index[derived_op.inputs[0]][row_index])
+                    final_value = int(not self.columns_dict[derived_op.inputs[0]][row_index])
                     column.append(final_value)
                 
                 else:
                     formed_row = []
                     for input_ in derived_op.inputs:
-                        value = self.columns_index[input_][row_index]
+                        value = self.columns_dict[input_][row_index]
                         formed_row.append(value)
                     final_value = derived_op.do(formed_row)
                     column.append(final_value)
@@ -111,7 +104,7 @@ class Table:
             self.columns.append(column)
 
             column_name = derived_op.header
-            self.columns_index[column_name] = self.columns[-1]
+            self.columns_dict[column_name] = self.columns[-1]
     
     def to_docx_table(self, document: Document, filename_to_save: str):
         docx_table = document.add_table(rows=2 ** len(self.inputs) + 1, cols=len(self.columns))
